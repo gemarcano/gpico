@@ -15,7 +15,7 @@ if (NOT EXISTS ${GPICO_PATH})
 endif()
 
 if (NOT EXISTS ${GPICO_PATH}/CMakeLists.txt)
-	message(FATAL_ERROR "Directory '${GPICO_PATH}' does is missing its CMake file?")
+	message(FATAL_ERROR "Directory '${GPICO_PATH}' is missing its CMake file?")
 endif()
 
 set(GPICO_PATH ${GPICO_PATH} CACHE PATH "Path to the gpico library" FORCE)
