@@ -9,7 +9,7 @@
 
 namespace gpico
 {
-	extern safe_syslog<syslog<1024*128>> sys_log;
+	extern safe_syslog<syslog<1024*4>> sys_log;
 }
 
 #endif//GPICO_LOG_H_

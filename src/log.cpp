@@ -7,5 +7,5 @@
 
 namespace gpico
 {
-	safe_syslog<syslog<1024*128>> sys_log;
+	safe_syslog<syslog<1024*4>> sys_log;
 }

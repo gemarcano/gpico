@@ -35,16 +35,17 @@ namespace gpico
 		 */
 		void push(std::string_view str)
 		{
-			if (str.size() > max_size)
+			const size_t needed = str.size() + sizeof(log);
+			if (needed > max_size)
 				return; // FIXME return some kind of error?
 
-			while (logs_.size() && str.size() > space_available_)
+			while (logs_.size() && needed > space_available_)
 			{
-				space_available_ += logs_.front().record.size();
+				space_available_ += (logs_.front().record.size() + sizeof(log));
 				logs_.pop_front();
 			}
 
-			space_available_ -= str.size();
+			space_available_ -= needed;
 			timeval tm;
 			gettimeofday(&tm, nullptr);
 			logs_.emplace_back(std::string(str), std::move(tm));

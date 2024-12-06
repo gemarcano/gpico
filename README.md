@@ -8,11 +8,7 @@ define `GPICO_PATH` when configuring CMAKE to the location of this repository.
 This uses [FreeRTOS-Kernel](https://github.com/FreeRTOS/FreeRTOS-Kernel.git)
 and the [pico-sdk](https://github.com/raspberrypi/pico-sdk.git).
 
-pico-sdk needs some patches provided by these PRs:
- - [pico-sdk #1530](https://github.com/raspberrypi/pico-sdk/pull/1530)
- - [pico-sdk #1635](https://github.com/raspberrypi/pico-sdk/pull/1635)
-
-And the tinyusb library in the pico-sdk (lib/tinyusb) needs this patch as well:
+The tinyusb library in the pico-sdk (lib/tinyusb) needs this patch as well:
  - [tinyusb #2474](https://github.com/hathach/tinyusb/pull/2474)
 
 After applying the patches, the build process is similar to a normal pico-sdk
