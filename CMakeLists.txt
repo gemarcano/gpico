@@ -36,6 +36,7 @@ target_compile_options(gpico INTERFACE
 	$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra>
 	-fstack-usage
 	-Wno-psabi
+	-DPICO_STDIO_SHORT_CIRCUIT_CLIB_FUNCS=0
 )
 
 target_include_directories(gpico INTERFACE
