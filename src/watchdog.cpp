@@ -31,7 +31,7 @@ namespace gpico
 			std::atomic_bool &status_ =
 				*reinterpret_cast<std::atomic_bool*>(status);
 			status_ = true;
-			vTaskDelay(50);
+			vTaskDelay(60);
 		}
 	}
 
@@ -40,7 +40,7 @@ namespace gpico
 		// The watchdog period needs to be long enough so long lock periods
 		// (apparently something in the wifi subsystem holds onto a lock for a
 		// while) are tolerated.
-		watchdog_enable(200, true);
+		watchdog_enable(400, true);
 		for(;;)
 		{
 			// The compiler is apparently smart enough to optimize this by
@@ -51,7 +51,7 @@ namespace gpico
 				watchdog_update();
 				std::ranges::fill(watchdog_cpu_status, 0);
 			}
-			vTaskDelay(30);
+			vTaskDelay(40);
 		}
 	}
 
