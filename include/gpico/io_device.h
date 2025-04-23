@@ -12,8 +12,9 @@
 namespace gpico
 {
 
-struct file_descriptor
+class file_descriptor
 {
+public:
 	virtual ~file_descriptor() = default;
 
 	/** Writes the span of data to the file.
@@ -48,7 +49,8 @@ class io_device
 {
 public:
 	virtual ~io_device() = default;
-	/** Open the device.
+
+	/** Checks to see if the device is available, and loads it if it is.
 	 *
 	 * This is meant to initialize the hardware or anything else required
 	 * to enable use of write and read. This may block until the device is
@@ -58,14 +60,21 @@ public:
 	 */
 	virtual bool probe() = 0;
 
-	/** Close the device.
+	/** Unloads resources held by the device.
 	 *
-	 * This frees up any resources taken during open.
+	 * This frees up any resources taken during probe.
 	 *
 	 * @returns True on success, false otherwise.
 	 */
 	virtual bool unload() = 0;
 
+	/** Opens the device for read-write access.
+	 *
+	 * @param[in] path Path to the device to open.
+	 *
+	 * @returns A file_descriptor pointer for file IO, or an error number in
+	 *  the case of failure.
+	 */
 	virtual std::expected<file_descriptor*, int> open(const char *path) = 0;
 };
 

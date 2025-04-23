@@ -10,7 +10,7 @@ namespace gpico
 
 /** Initializes all of the watchdog tasks for the cores of the machine.
  *
- * For the rp2040, there are two cores, so each core gets its own dedicated
+ * For the rp2xxx, there are two cores, so each core gets its own dedicated
  * task, plus one central task.
  *
  * This _must_ be called from within a FreeRTOS task!

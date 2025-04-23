@@ -25,7 +25,22 @@ public:
 
 	std::expected<file_descriptor*, int> open(const char *path) override;
 
+	/** Sends data over the CDC device.
+	 *
+	 * @param[in] data Data to send.
+	 *
+	 * @returns The number of bytes sent, or -1 if an error occurred. On an
+	 *  error errno is set.
+	 */
 	int write(std::span<const std::byte> data);
+
+	/** Receives data over the CDC device.
+	 *
+	 * @param[in] data Buffer for incoming data.
+	 *
+	 * @returns The number of bytes received, or -1 if an error occurred. On an
+	 *  error errno is set.
+	 */
 
 	int read(std::span<std::byte> buffer);
 
@@ -36,15 +51,20 @@ public:
 	 */
 	void update();
 
-
 private:
 	/// Atomic flag indicating whether the USB CDC device is connected.
 	std::atomic_bool connected_ = false;
 };
 
+/** File descriptor representing a CDC device.
+ */
 class cdc_file_descriptor : public file_descriptor
 {
 public:
+	/** Constructor.
+	 *
+	 * @param[in,out] device CDC device to associate with this descriptor.
+	 */
 	cdc_file_descriptor(cdc_device& device);
 
 	int write(std::span<const std::byte> data) override;

@@ -9,6 +9,8 @@
 
 namespace gpico
 {
+	// FIXME we probably shouldn't have a fixed size... let the application set
+	// the size!
 	extern safe_syslog<syslog<1024*4>> sys_log;
 }
 
