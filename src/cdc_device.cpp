@@ -15,13 +15,15 @@ extern int errno;
 namespace gpico
 {
 
-bool cdc_device::open()
+cdc_file_descriptor cdc_descriptor(gpico::cdc);
+
+bool cdc_device::probe()
 {
 	while(!connected_);
 	return true;
 }
 
-bool cdc_device::close()
+bool cdc_device::unload()
 {
 	return true;
 }
@@ -31,7 +33,26 @@ void cdc_device::update()
 	connected_ = tud_cdc_connected();
 }
 
-int cdc_device::write(std::span<const unsigned char> data)
+std::expected<file_descriptor*, int> cdc_device::open(const char * /*path*/)
+{
+	return &cdc_descriptor;
+}
+
+cdc_file_descriptor::cdc_file_descriptor(cdc_device& device)
+:device(device)
+{}
+
+int cdc_file_descriptor::write(std::span<const std::byte> data)
+{
+	return device.write(data);
+}
+
+int cdc_file_descriptor::read(std::span<std::byte> buffer)
+{
+	return device.read(buffer);
+}
+
+int cdc_device::write(std::span<const std::byte> data)
 {
 	if (!connected_)
 	{
@@ -45,12 +66,13 @@ int cdc_device::write(std::span<const unsigned char> data)
 		tud_cdc_write_flush();
 	}
 
-	uint32_t result = tud_cdc_write(data.data(), data.size());
+	uint32_t result = tud_cdc_write(
+		reinterpret_cast<const unsigned char*>(data.data()), data.size());
 	tud_cdc_write_flush();
 	return static_cast<int>(result);
 }
 
-int cdc_device::read(std::span<unsigned char> buffer)
+int cdc_device::read(std::span<std::byte> buffer)
 {
 	if (!connected_)
 	{
@@ -68,7 +90,9 @@ int cdc_device::read(std::span<unsigned char> buffer)
 	for (read_ = 0; read_ < buffer.size() && tud_cdc_available();)
 	{
 		// read and echo back
-		read_ += tud_cdc_read(buffer.data() + read_, buffer.size() - read_);
+		read_ += tud_cdc_read(
+			reinterpret_cast<unsigned char*>(buffer.data()) + read_,
+			buffer.size() - read_);
 	}
 	return static_cast<int>(read_);
 }

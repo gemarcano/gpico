@@ -6,9 +6,41 @@
 #define GPICO_IO_DEVICE_H_
 
 #include <span>
+#include <memory>
+#include <expected>
 
 namespace gpico
 {
+
+struct file_descriptor
+{
+	virtual ~file_descriptor() = default;
+
+	/** Writes the span of data to the file.
+	 *
+	 * The actual number of bytes written may be less than the number
+	 * requested.
+	 *
+	 * @param[in] data Span of data to write to the file.
+	 *
+	 * @returns The actual number of bytes written, or -1 on an error
+	 *  (errno should also be set to something sensible).
+	 */
+	virtual int write(std::span<const std::byte> data) = 0;
+
+	/** Reads data from the file.
+	 *
+	 * The actual number of bytes read may be less than the size of the
+	 * span, due to EOF or the device not having any more data at that
+	 * time.
+	 *
+	 * @param[in] data Span of data to receive data from the file.
+	 *
+	 * @returns The actual number of bytes read, or -1 on an error
+	 *  (errno should also be set to something sensible).
+	 */
+	virtual int read(std::span<std::byte> buffer) = 0;
+};
 
 /**Abstract class representing IO devices.
  */
@@ -24,7 +56,7 @@ public:
 	 *
 	 * @returns True on success, false otherwise.
 	 */
-	virtual bool open() = 0;
+	virtual bool probe() = 0;
 
 	/** Close the device.
 	 *
@@ -32,32 +64,9 @@ public:
 	 *
 	 * @returns True on success, false otherwise.
 	 */
-	virtual bool close() = 0;
+	virtual bool unload() = 0;
 
-	/** Writes the span of data to the device.
-	 *
-	 * The actual number of bytes written may be less than the number
-	 * requested.
-	 *
-	 * @param[in] data Span of data to write to the device.
-	 *
-	 * @returns The actual number of bytes written, or -1 on an error
-	 *  (errno should also be set to something sensible).
-	 */
-	virtual int write(std::span<const unsigned char> data) = 0;
-
-	/** Reads data from the device.
-	 *
-	 * The actual number of bytes read may be less than the size of the
-	 * span, due to EOF or the device not having any more data at that
-	 * time.
-	 *
-	 * @param[in] data Span of data to receive data from the device.
-	 *
-	 * @returns The actual number of bytes read, or -1 on an error
-	 *  (errno should also be set to something sensible).
-	 */
-	virtual int read(std::span<unsigned char> buffer) = 0;
+	virtual std::expected<file_descriptor*, int> open(const char *path) = 0;
 };
 
 }

@@ -9,6 +9,7 @@
 
 #include <atomic>
 #include <span>
+#include <expected>
 
 namespace gpico
 {
@@ -18,9 +19,15 @@ namespace gpico
 class cdc_device : public io_device
 {
 public:
-	bool open() override;
+	bool probe() override;
 
-	bool close() override;
+	bool unload() override;
+
+	std::expected<file_descriptor*, int> open(const char *path) override;
+
+	int write(std::span<const std::byte> data);
+
+	int read(std::span<std::byte> buffer);
 
 	/** Updates the connected status of the TinyUSB CDC device.
 	 *
@@ -29,16 +36,26 @@ public:
 	 */
 	void update();
 
-	int write(std::span<const unsigned char> data) override;
-
-	int read(std::span<unsigned char> buffer) override;
 
 private:
 	/// Atomic flag indicating whether the USB CDC device is connected.
 	std::atomic_bool connected_ = false;
 };
 
+class cdc_file_descriptor : public file_descriptor
+{
+public:
+	cdc_file_descriptor(cdc_device& device);
+
+	int write(std::span<const std::byte> data) override;
+
+	int read(std::span<std::byte> buffer) override;
+private:
+	cdc_device& device;
+};
+
 extern cdc_device cdc;
+extern cdc_file_descriptor cdc_descriptor;
 
 }
 
