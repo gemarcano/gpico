@@ -43,17 +43,6 @@ public:
 	 */
 
 	int read(std::span<std::byte> buffer);
-
-	/** Updates the connected status of the TinyUSB CDC device.
-	 *
-	 * This can be called from multiple threads, but it really needs to be
-	 * called from the same thread/task as the main tud_task call.
-	 */
-	void update();
-
-private:
-	/// Atomic flag indicating whether the USB CDC device is connected.
-	std::atomic_bool connected_ = false;
 };
 
 /** File descriptor representing a CDC device.

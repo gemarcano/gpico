@@ -15,7 +15,7 @@ target_sources(gpico INTERFACE
 	src/syscalls.cpp
 	src/watchdog.cpp
 	src/log.cpp
-	#	src/usb_descriptors.cpp
+	src/usb.cpp
 )
 
 #pico_generate_pio_header(gpico

@@ -3,6 +3,7 @@
 /// @file
 
 #include <gpico/cdc_device.h>
+#include <gpico/usb.h>
 
 #include <tusb.h>
 
@@ -19,18 +20,13 @@ cdc_file_descriptor cdc_descriptor(gpico::cdc);
 
 bool cdc_device::probe()
 {
-	while(!connected_);
+	while(!usb_cdc_connected());
 	return true;
 }
 
 bool cdc_device::unload()
 {
 	return true;
-}
-
-void cdc_device::update()
-{
-	connected_ = tud_cdc_connected();
 }
 
 std::expected<file_descriptor*, int> cdc_device::open(const char * /*path*/)
@@ -54,7 +50,7 @@ int cdc_file_descriptor::read(std::span<std::byte> buffer)
 
 int cdc_device::write(std::span<const std::byte> data)
 {
-	if (!connected_)
+	if (!usb_cdc_connected())
 	{
 		errno = ENXIO;
 		return -1;
@@ -74,7 +70,7 @@ int cdc_device::write(std::span<const std::byte> data)
 
 int cdc_device::read(std::span<std::byte> buffer)
 {
-	if (!connected_)
+	if (!usb_cdc_connected())
 	{
 		errno = ENXIO;
 		return -1;
@@ -100,4 +96,3 @@ int cdc_device::read(std::span<std::byte> buffer)
 cdc_device cdc;
 
 }
-
