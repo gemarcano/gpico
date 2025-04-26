@@ -16,6 +16,8 @@ target_sources(gpico INTERFACE
 	src/watchdog.cpp
 	src/log.cpp
 	src/usb.cpp
+	external/littlefs/lfs.c
+	external/littlefs/lfs_util.c
 )
 
 #pico_generate_pio_header(gpico
