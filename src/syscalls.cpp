@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <tuple>
 #include <memory>
+#include <optional>
 
 #include <errno.h>
 #undef errno
