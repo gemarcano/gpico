@@ -16,6 +16,7 @@ target_sources(gpico INTERFACE
 	src/watchdog.cpp
 	src/log.cpp
 	src/usb.cpp
+	src/reset.cpp
 	external/littlefs/lfs.c
 	external/littlefs/lfs_util.c
 )
