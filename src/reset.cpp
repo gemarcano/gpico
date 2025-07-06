@@ -4,6 +4,7 @@
 
 #include <gpico/watchdog.h>
 
+#include <hardware/structs/mpu.h>
 #include <hardware/watchdog.h>
 #include <pico/multicore.h>
 #include <pico/bootrom.h>
@@ -25,6 +26,7 @@ namespace gpico
         taskENTER_CRITICAL();
 		if (bootsel)
 		{
+			mpu_hw->ctrl &= ~1; // disable MPU, just in case it's blocking ROM
 			multicore_reset_core1();
         	reset_usb_boot(0,0);
 			std::unreachable();
@@ -39,7 +41,7 @@ namespace gpico
 		std::unreachable();
 	}
 
-	void bootsel_reset()
+	[[noreturn]] void bootsel_reset()
 	{
 		xTaskCreateAffinitySet(
 			reset_task,
@@ -52,7 +54,7 @@ namespace gpico
 		for(;;);
 	}
 
-	void flash_reset()
+	[[noreturn]] void flash_reset()
 	{
 		xTaskCreateAffinitySet(
 			reset_task,
