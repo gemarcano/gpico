@@ -32,6 +32,9 @@ static void usb_device_task(void*)
 	for(;;)
 	{
 		tud_task();
+		// FIXME does the pico-sdk tinyusb functionality not honor FreeRTOS
+		// blocking?
+		vTaskDelay(1);
 		// tud_cdc_connected() must be called in the same task as tud_task, as
 		// an internal data structure is shared without locking between both
 		// functions. See https://github.com/hathach/tinyusb/issues/1472

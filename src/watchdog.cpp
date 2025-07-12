@@ -31,7 +31,7 @@ namespace gpico
 			std::atomic_bool &status_ =
 				*reinterpret_cast<std::atomic_bool*>(status);
 			status_ = true;
-			vTaskDelay(60);
+			vTaskDelay(150);
 		}
 	}
 
@@ -51,7 +51,7 @@ namespace gpico
 				watchdog_update();
 				std::ranges::fill(watchdog_cpu_status, 0);
 			}
-			vTaskDelay(40);
+			vTaskDelay(170);
 		}
 	}
 
@@ -69,7 +69,7 @@ namespace gpico
 				watchdog_task_names[i],
 				configMINIMAL_STACK_SIZE,
 				&watchdog_cpu_status[i],
-				tskIDLE_PRIORITY+2,
+				tskIDLE_PRIORITY+5,
 				1 << i,
 				nullptr);
 		}
@@ -78,7 +78,7 @@ namespace gpico
 			"gpico_watchdog_core",
 			configMINIMAL_STACK_SIZE,
 			nullptr,
-			tskIDLE_PRIORITY+2,
+			tskIDLE_PRIORITY+5,
 			(1 << 0) | (1 << 1),
 			nullptr);
 	}
