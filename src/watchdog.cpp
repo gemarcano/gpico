@@ -67,7 +67,7 @@ namespace gpico
 			xTaskCreateAffinitySet(
 				watchdog_cpu_task,
 				watchdog_task_names[i],
-				configMINIMAL_STACK_SIZE,
+				64,
 				&watchdog_cpu_status[i],
 				tskIDLE_PRIORITY+5,
 				1 << i,
@@ -76,7 +76,7 @@ namespace gpico
 		xTaskCreateAffinitySet(
 			watchdog_task,
 			"gpico_watchdog_core",
-			configMINIMAL_STACK_SIZE,
+			64,
 			nullptr,
 			tskIDLE_PRIORITY+5,
 			(1 << 0) | (1 << 1),
